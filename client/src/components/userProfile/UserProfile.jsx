@@ -7,7 +7,6 @@ const UserProfile = () => {
   const [data, setData] = useState();
   const tiltRef = useRef(null);
   const { email } = useParams();
-  console.log(email);
 
   useEffect(() => {
     async function getUser() {
@@ -41,7 +40,6 @@ const UserProfile = () => {
     tilt.style.transform = tiltMove(0, 0);
   };
 
-  // console.log(data.data)
   return (
     <div className="bg-white">
       {data && (
@@ -50,23 +48,39 @@ const UserProfile = () => {
           <section className="flex justify-center">
             <div
               ref={tiltRef}
-              className="tilt bg-[#f7f7c0] w-[300px] h-[400px] mt-24 flex flex-col items-center p-4"
+              className="tilt bg-[#f7f7c0] w-[300px]  mt-16 flex flex-col items-center p-4"
               onMouseMove={handleMouseMove}
               onMouseOut={handleMouseOut}
             >
               <div className="tilt__content text-center flex justify-center">
-                <img
-                  src={data?.data?.user?.coverPhoto}
-                  className="w-24 h-24 rounded-full object-cover"
-                  alt="profile picture"
-                />
+                {data?.data?.user?.coverPhoto ? (
+                  <img
+                    src={data?.data?.user?.coverPhoto}
+                    className="w-24 h-24 rounded-full object-cover"
+                    alt="profile picture"
+                  />
+                ) : (
+                  <i className="fa-solid fa-user text-2xl sm:text-4xl bg-gray-300 hover:bg-gray-400 transition-all w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center rounded-full cursor-pointer"></i>
+                )}
               </div>
               <div className="content">
                 <h1 className="text-2xl font-bold text-center uppercase underline">
                   {data?.data?.user?.name}
                 </h1>
-                <div className="qrcode mt-10">
-                  <img src={data?.data?.qrCode} alt="" />
+                <div className="moreinfo text-gray-500 flex gap-3 justify-center mt-1">
+                  <span>Name:</span>
+                  <span>{data?.data?.user?.name}</span>
+                </div>
+                <div className="moreinfo text-gray-500 flex gap-3 justify-center mt-1">
+                  <span>Email:</span>
+                  <span>{data?.data?.user?.email}</span>
+                </div>
+                <div className="moreinfo text-gray-500 flex gap-3 justify-center mt-1">
+                  <span>Phone Number:</span>
+                  <span>{data?.data?.user.phoneNumber}</span>
+                </div>
+                <div className="qrcode mt-10 flex justify-center">
+                  <img src={data?.data?.qrCode} className="w-[200px] h-[200px]" alt="" />
                 </div>
               </div>
             </div>

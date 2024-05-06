@@ -1,7 +1,6 @@
 import { useRef, useState } from "react";
 import axios from "axios";
 import {
-  createWithEmail,
   signupWithGoogle,
 } from "../../firebase/createWithEmail";
 import toast from "react-hot-toast";
