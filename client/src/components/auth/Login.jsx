@@ -1,8 +1,6 @@
 import { useRef, useState } from "react";
 import axios from "axios";
-import {
-  signupWithGoogle,
-} from "../../firebase/createWithEmail";
+import { signupWithGoogle } from "../../firebase/createWithEmail";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -14,7 +12,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSignup = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
@@ -27,25 +25,41 @@ const Login = () => {
       const existingUser = await axios.get(
         `http://localhost:3001/api/check-user/${email}`
       );
-
       if (!existingUser.data.exists) {
         toast.error("User not found! Please signup first.");
-        console.log("user not exist")
+        console.log("user not exist");
       } else {
+        const response = await axios.post("http://localhost:3001/api/login", {
+          email,
+          password,
+        });
         toast.success("Login successful");
         navigate(`/user-profile/${email}`);
       }
     } catch (error) {
-      toast.error("signup failded");
-      throw new error();
+      console.log(error.request);
+      if (error.request.status === 401) {
+        console.log("pass is incorrect");
+        toast.error("Incorrect password");
+      } else {
+        toast.error("signup failded");
+      }
     } finally {
       setLoading(false);
     }
   };
+
   const googleSignup = async () => {
     const res = await signupWithGoogle();
-    console.log(res.user.email);
-    navigate(`/user-profile/${res?.user?.email}`);
+    const existingUser = await axios.get(
+      `http://localhost:3001/api/check-user/${res?.user?.email}`
+    );
+    if (!existingUser.data.exists) {
+      navigate(`/signup`);
+    } else {
+      console.log("res: ", res);
+      navigate(`/user-profile/${res?.user?.email}`);
+    }
   };
 
   return (
@@ -109,17 +123,17 @@ const Login = () => {
           </div>
 
           <button
-            onClick={handleSignup}
+            onClick={handleLogin}
             className="text-white bg-[#EA4B8B] py-2 sm:w-[100%] rounded-md mt-6"
           >
-            {loading ? "loading.." : "Create account"}
+            {loading ? "loading.." : "Login"}
           </button>
           <button
             onClick={googleSignup}
             className="text-white bg-gray-800 py-2 sm:w-[100%] rounded-md mt-3"
           >
             <i className="fa-brands fa-google me-3"></i>
-            {loading ? "loading.." : "Sign Up with google"}
+            Sign Up with google
           </button>
         </form>
       </div>

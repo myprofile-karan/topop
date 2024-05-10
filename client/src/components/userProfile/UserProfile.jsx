@@ -80,7 +80,11 @@ const UserProfile = () => {
                   <span>{data?.data?.user.phoneNumber}</span>
                 </div>
                 <div className="qrcode mt-10 flex justify-center">
-                  <img src={data?.data?.qrCode} className="w-[200px] h-[200px]" alt="" />
+                  <img
+                    src={data?.data?.qrCode}
+                    className="w-[200px] h-[200px]"
+                    alt=""
+                  />
                 </div>
               </div>
             </div>

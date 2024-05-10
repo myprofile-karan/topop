@@ -1,6 +1,9 @@
 import { useRef, useState } from "react";
 import axios from "axios";
-import {createWithEmail, signupWithGoogle} from "../../firebase/createWithEmail";
+import {
+  createWithEmail,
+  signupWithGoogle,
+} from "../../firebase/createWithEmail";
 import toast from "react-hot-toast";
 import uploadImage from "../../helpers/upload";
 import { Link, useNavigate } from "react-router-dom";
@@ -51,13 +54,14 @@ const Signup = () => {
           termsAccepted,
         });
 
-        await createWithEmail(email, password);
+        const emailRes = await createWithEmail(email, password);
+        console.log(emailRes);
         toast.success("signup successful");
         navigate(`/user-profile/${email}`);
       }
     } catch (error) {
       toast.error("signup failded");
-      throw new error;
+      throw new error();
     } finally {
       setLoading(false);
     }
@@ -98,10 +102,10 @@ const Signup = () => {
                 )}
               </div>
               {!coverPhoto && (
-              <i
-                onClick={handleImageClick}
-                className="fa-solid fa-user text-2xl sm:text-4xl bg-gray-300 hover:bg-gray-400 transition-all w-16 h-16 sm:w-24 sm:h-24 flex items-center justify-center rounded-full cursor-pointer"
-              ></i>
+                <i
+                  onClick={handleImageClick}
+                  className="fa-solid fa-user text-2xl sm:text-4xl bg-gray-300 hover:bg-gray-400 transition-all w-16 h-16 sm:w-24 sm:h-24 flex items-center justify-center rounded-full cursor-pointer"
+                ></i>
               )}
             </div>
           </div>
@@ -191,9 +195,11 @@ const Signup = () => {
                 {passwordVisible ? "Hide" : "Show"}
               </button>
             </div>
-
             <span className="text-sm">
-              Already a user? <Link to="/login" className="text-blue-700">Signup here</Link>
+              Already a user?{" "}
+              <Link to="/login" className="text-blue-700">
+                Signup here
+              </Link>
             </span>
             <div className="relative flex items-start gap-1">
               <input
